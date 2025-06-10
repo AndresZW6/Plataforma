@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerControl : MonoBehaviour
 {
+    //Declaramos objetos para los disparadores/colisionadores
+    public GameObject cubo, esfera, cilindro,pressF;
+     
     //Declarando variable de velocidad de dezplazamiento (1)
     public float VDesplazamiento;
 
@@ -23,12 +27,25 @@ public class PlayerControl : MonoBehaviour
     //Variable de rotacion (6)
     public float VRotacion = 10f;
         
+    //Variable de animacion (7)
+    public Animator anim;
+
+    //Variable de ataque (8)
+    public bool atacando;
+
+    //Si tenemos un combo
+    public int combo;
 
     // Start is called before the first frame update
     void Start()
     {
         //Detección script camara
         camara = FindObjectOfType<CamaraControl>();
+
+        cubo.SetActive(false);
+        esfera.SetActive(true);
+        cilindro.SetActive(false);
+        pressF.SetActive(false);
     }
 
     //Condicion de Gravedad (4)
@@ -90,5 +107,116 @@ public class PlayerControl : MonoBehaviour
         //Control de movimiento con Character Controller (2)
         //CharCon.Move(new Vector3(Input.GetAxisRaw("Horizontal") * VDesplazamiento, 0f, Input.GetAxisRaw("Vertical") * VDesplazamiento) * Time.deltaTime);
 
+        float MovVel = new Vector3 (CantidadMovimiento.x, 0f, CantidadMovimiento.z).magnitude + VDesplazamiento;
+
+        anim.SetFloat("velocidad", MovVel);
+        anim.SetBool("isGrounded", CharCon.isGrounded);
+        anim.SetFloat("yVelocidad", CantidadMovimiento.y);
+
+        //si pulso el click izquierdo y el personaje se encuentra en el piso ataques en tierra (8)
+        //if (Input.GetMouseButtonDown(0) && CharCon.isGrounded)
+        //{
+            //atacando es verdadero
+            //atacando = true;
+            AtaqueCombo();
+            //si atacando es verdadero
+            //if(atacando == true)
+            //{
+            //    anim.SetBool("isAttack", true);
+            //}
+        //}
+        //else{
+           // DesactivarAtaque();
+        //}
+    }
+
+    //Sistema de interacciones al entrar al disparador/colisionador
+    //private void OnTriggerEnter(Collider other)
+    //{
+        //if(other.name == "TriggerCubo")
+        //{
+            //Debug.Log("Estas entrando al Cubo");
+            //pressF.SetActive(true);          
+        //}
+        //if(other.name == "TriggerEsfera")
+        //{
+            //Debug.Log("Estas entrando a la esfera");
+            //cubo.SetActive(true);
+        //}
+        //if(other.name == "TriggerCilindro")
+        //{
+            //Debug.Log("Estas entrando al cilindro");
+            //SceneManager.LoadScene("Menu");
+
+        //}
+    //}
+
+    //Sistema de interacciones al salir del disparador/colisionador Ejemplo
+    //private void OnTriggerExit(Collider other)
+    //{
+       // if(other.name == "TriggerCubo")
+        //{
+           // Debug.Log("Estas saliendo del Cubo");
+            //pressF.SetActive(false);
+        //}
+        //if(other.name == "TriggerEsfera")
+        //{
+            //Debug.Log("Estas saliendo de la esfera");
+            //esfera.SetActive(false);
+        //}
+        //if(other.name == "TriggerCilindro")
+        //{
+            //Debug.Log("Estas saliendo del cilindro");
+        //}
+    //}
+
+    //Sistema de interacciones al estar dentro del disparador/colisionador
+    //private void OnTriggerStay(Collider other)
+    //{
+        //if(other.name == "TriggerCubo")
+        //{
+            //Debug.Log("Estas dentro del Cubo");
+            //if(Input.GetKey(KeyCode.F))
+            //{
+                //cubo.SetActive(false);
+                //cilindro.SetActive(true);
+                //pressF.SetActive(false);
+            //}
+        //}
+        //if(other.name == "TriggerEsfera")
+        //{
+            //Debug.Log("Estas dentro de la esfera");
+        //}
+        //if(other.name == "TriggerCilindro")
+        //{
+            //Debug.Log("Estas dentro del cilindro");
+        //}
+    //}
+
+    public void DesactivarAtaque()
+    {
+        atacando = false;
+        combo = 0;
+        anim.SetBool("isAttack", false);       
+    }
+
+    public void AtaqueCombo()
+    {
+        if(Input.GetMouseButtonDown(0) && !atacando)
+        {
+            atacando = true;
+            anim.SetBool("isAttack", true); 
+            anim.SetTrigger("" + combo);
+        }
+    }
+
+    public void EmpezarCombo()
+    {
+        atacando = false;
+        if(combo < 3)
+        {
+            combo++;
+        }
     }
 }
+
