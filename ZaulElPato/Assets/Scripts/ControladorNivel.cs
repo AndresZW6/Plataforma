@@ -22,6 +22,8 @@ public class ControladorNivel : MonoBehaviour
 
     public Vector3 puntoRespawn;
 
+    private CamaraControl camara;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +32,8 @@ public class ControladorNivel : MonoBehaviour
 
         //Generamos el punto de reapacion
         puntoRespawn = player.transform.position + Vector3.up;
+
+        camara = FindObjectOfType<CamaraControl>();
     }
 
     // Update is called once per frame
@@ -55,16 +59,25 @@ public class ControladorNivel : MonoBehaviour
         //El jugador se desactiva
         player.gameObject.SetActive(false);
 
+        //Mandamos a llamar al script ControladorUI para desvanecer a negro
+        ControladorUI.instancia.FadeToBlack();
+
         //Comienza la cuenta regresiva
         yield return new WaitForSeconds(TiempoAntesRespawn);
 
         //Una vez finalice el TiempoAntesRespawn la posicion del jugador va a ser igual a la posicion del puntoRespawn
         //y se activa el jugador
         player.transform.position = puntoRespawn;
+
+        camara.AnclarObjetivo();
+
         player.gameObject.SetActive(true);
 
         //Respawneando regresa a ser falso
         Respawneando = false;
+
+        //Mandamos a llamar al script ControladorUI para desvanecer desde el negro
+        ControladorUI.instancia.FadeFromBlack();
 
     }
     
