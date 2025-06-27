@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ControladorUI : MonoBehaviour
 {
@@ -20,6 +21,12 @@ public class ControladorUI : MonoBehaviour
     public Image FadeScreen;
     public bool isFadingToBlack, isFadingFromBlack;
     public float Vfade = 2f;
+
+    //comentar
+    public Slider BarraVida;
+    public TMP_Text TextoVida;
+
+    public TMP_Text ColeccionableText;
 
     // Start is called before the first frame update
     void Start()
@@ -65,5 +72,14 @@ public class ControladorUI : MonoBehaviour
         isFadingToBlack = false;
         //Desvaneciendoce desde el negro es verdadero
         isFadingFromBlack = true;
+    }
+
+    //comentar
+    public void ActualizarVida(int salud)
+    {
+        TextoVida.text = "JUGADOR: " + salud + "/" + VidaJugador.instancia.VidaMax;
+
+        BarraVida.maxValue = VidaJugador.instancia.VidaMax;
+        BarraVida.value = salud;
     }
 }

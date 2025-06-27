@@ -24,6 +24,8 @@ public class ControladorNivel : MonoBehaviour
 
     private CamaraControl camara;
 
+    public int ColectAct;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,6 +81,15 @@ public class ControladorNivel : MonoBehaviour
         //Mandamos a llamar al script ControladorUI para desvanecer desde el negro
         ControladorUI.instancia.FadeFromBlack();
 
+        VidaJugador.instancia.CantidadVida();
+
+    }
+
+    public void GetColect()
+    {
+        ColectAct++;
+
+        ControladorUI.instancia.ColeccionableText.text = ColectAct.ToString();
     }
     
 }

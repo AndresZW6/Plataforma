@@ -36,6 +36,8 @@ public class PlayerControl : MonoBehaviour
     //Si tenemos un combo
     public int combo;
 
+    public float ReboteDano;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -217,6 +219,13 @@ public class PlayerControl : MonoBehaviour
         {
             combo++;
         }
+    }
+
+    public void Rebote()
+    {
+        CantidadMovimiento.y = ReboteDano;
+
+        CharCon.Move(Vector3.up * ReboteDano * Time.deltaTime);
     }
 }
 

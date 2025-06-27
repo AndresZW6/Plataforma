@@ -17,7 +17,15 @@ public class EnemyController1 : MonoBehaviour
 
     public Rigidbody ERB;
 
+    public PlayerControl Eljugador;
+
     private float yCantidad;
+
+    public float EsperaAntesDestruir;
+    public float AplastarV;
+    private float ContadorMuerte;
+
+
 
 
 
@@ -33,6 +41,21 @@ public class EnemyController1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(ContadorMuerte > 0)
+        {
+            ContadorMuerte -= Time.deltaTime;
+            ERB.velocity = new Vector3(0f, ERB.velocity.y, 0f);
+
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(1.3f, 0.05f, 1.3f), AplastarV * Time.deltaTime);
+
+            if(ContadorMuerte <=0)
+            {
+                Destroy(gameObject);
+            }
+        }
+
+        else
+        {
         yCantidad = ERB.velocity.y;
 
         DireccionMovimiento = PuntosPatrullaje[PuntosActuales].position - transform.position;
@@ -47,6 +70,7 @@ public class EnemyController1 : MonoBehaviour
         {
             PuntoSiguiente();
         }
+        }
     }
 
     public void PuntoSiguiente()
@@ -58,4 +82,25 @@ public class EnemyController1 : MonoBehaviour
             PuntosActuales = 0;
         }
     }
+
+    private void OnCollisionStay(Collision contacto)
+    {
+        if(contacto.gameObject.tag == "Player" && ContadorMuerte == 0)
+        {
+            VidaJugador.instancia.DanoJugador();
+        }
+
+    }
+
+    private void OnTriggerEnter(Collider otro)
+    {
+        if(otro.tag == "Player")
+        {        
+            ContadorMuerte = EsperaAntesDestruir;
+
+            Eljugador.Rebote();
+        }
+    }
+
+
 }
